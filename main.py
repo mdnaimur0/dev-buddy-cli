@@ -4,13 +4,14 @@ import os
 import subprocess
 
 from pathlib import Path
+from typing import Dict, List, Optional
 
 
 class Buddy:
     def __init__(self):
         self.bookmarks_file = Path.home() / ".dir_bookmarks.txt"
 
-    def get_bookmarks(self) -> dict[str, str]:
+    def get_bookmarks(self) -> Dict[str, str]:
         """Get all bookmarks as a dictionary."""
         bookmarks = {}
         if self.bookmarks_file.exists():
@@ -40,7 +41,7 @@ class Buddy:
         # Return as-is if not found (let the calling function handle errors)
         return path
 
-    def get_directories(self, path: Path) -> list[Path]:
+    def get_directories(self, path: Path) -> List[Path]:
         """List all directories in the given path and return them."""
         if not path.exists():
             print(f"Path '{path}' does not exist.")
@@ -57,7 +58,7 @@ class Buddy:
 
         return directories
 
-    def take_input_and_return_bm_or_dir(self, path: Path) -> Path | None:
+    def take_input_and_return_bm_or_dir(self, path: Path) -> Optional[Path]:
         """Take user input to select a directory or bookmark."""
         bookmarks = self.get_bookmarks()
         directories = self.get_directories(path)
@@ -138,12 +139,13 @@ class Buddy:
             return
 
         try:
+            path_str = os.fspath(path)
             if sys.platform == "win32":
-                os.startfile(path)
+                os.startfile(path_str)
             elif sys.platform == "darwin":
-                subprocess.run(["open", str(path)], check=True)
+                subprocess.run(["open", path_str], check=True)
             else:
-                subprocess.run(["xdg-open", str(path)], check=True)
+                subprocess.run(["xdg-open", path_str], check=True)
         except Exception as e:
             print(f"Failed to open directory: {e}")
 
@@ -155,10 +157,11 @@ class Buddy:
 
         # Try different VS Code command variations
         vscode_commands = ["code", "code.exe", "code.cmd"]
+        path_str = os.fspath(path)
 
         for cmd in vscode_commands:
             try:
-                subprocess.run([cmd, str(path)], check=True)
+                subprocess.run([cmd, path_str], check=True)
                 return
             except FileNotFoundError:
                 continue
@@ -245,7 +248,7 @@ class Buddy:
 
 
 def parse_args() -> ap.Namespace:
-    parser = ap.ArgumentParser(description="Dev Buddy CLI", prog='buddy')
+    parser = ap.ArgumentParser(description="Dev Buddy CLI", prog="buddy")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # Bookmarks command (for listing bookmarks)
