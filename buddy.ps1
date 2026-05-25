@@ -3,7 +3,7 @@ param(
     [string[]]$Arguments
 )
 
-$PythonScript = "main.py"
+$PythonScript = Join-Path $PSScriptRoot "main.py"
 
 # Run the Python script with all arguments
 $result = & python -u $PythonScript @Arguments
