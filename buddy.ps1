@@ -15,11 +15,11 @@ if ($lastLine.StartsWith("GOTO:")) {
     # Fix: Properly extract the path part
     $pathStr = $lastLine.Substring(5).Trim()
 
-    # Optionally change drive if needed
-    $ExecutionContext.SessionState.Path.SetLocation([System.IO.Path]::GetPathRoot($pathStr))
+    # Optionally change drive if needed (silently)
+    $null = $ExecutionContext.SessionState.Path.SetLocation([System.IO.Path]::GetPathRoot($pathStr)) 2>$null
 
-    # Now change to the full path
-    Set-Location -Path $pathStr
+    # Now change to the full path (silently)
+    Set-Location -Path $pathStr 2>$null | Out-Null
     Write-Output "Changed directory to: $pathStr"
 } else {
     Write-Output $result
