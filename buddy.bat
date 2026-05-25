@@ -2,13 +2,13 @@
 setlocal EnableDelayedExpansion
 
 REM ============================================================================
-REM  b.bat - Dev Buddy CLI wrapper for Windows CMD
+REM  buddy.bat - Dev Buddy CLI wrapper for Windows CMD
 REM
 REM  Runs main.py with all arguments. If the last line of stdout starts with
 REM  "GOTO:", changes the shell's working directory to the specified path.
 REM  Otherwise, prints all captured stdout as-is.
 REM
-REM  Usage:  b <command> [args...]
+REM  Usage:  buddy <command> [args...]
 REM
 REM  Note:   stderr is NOT redirected — interactive prompts and menus printed
 REM          by Python to stderr appear on screen in real time. Only stdout
@@ -19,7 +19,7 @@ set "SCRIPT_DIR=%~dp0"
 set "PYTHON_SCRIPT=%SCRIPT_DIR%main.py"
 
 REM --- Capture only stdout; let stderr flow to the console -------------------
-set "TMPFILE=%SCRIPT_DIR%b_output_%RANDOM%_%RANDOM%.tmp"
+set "TMPFILE=%SCRIPT_DIR%buddy_output_%RANDOM%_%RANDOM%.tmp"
 python -u "%PYTHON_SCRIPT%" %* > "%TMPFILE%"
 
 REM --- Read the last line of stdout ------------------------------------------
